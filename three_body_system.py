@@ -87,9 +87,6 @@ class ThreeBodySimulator:
     def __init__(self, system, filename="three_body_simulation"):
         """
         Inicializa el simulador del sistema de tres cuerpos.
-        
-        :param system: Instancia de ThreeBodySystem.
-        :param filename: Nombre base para los archivos de salida.
         """
         self.system = system
         self.filename = filename
@@ -109,7 +106,7 @@ class ThreeBodySimulator:
         state = self.system.state
         
         with open(f"data/{self.filename}.dat", "w") as file:
-            # Encabezado del archivo
+            # Encabezado del archivo de salida
             file.write("# t x1 y1 z1 x2 y2 z2 x3 y3 z3 ")
             file.write("vx1 vy1 vz1 vx2 vy2 vz2 vx3 vy3 vz3 ")
             file.write("E_kin E_pot E_tot Lx Ly Lz\n")
@@ -118,19 +115,16 @@ class ThreeBodySimulator:
             for _ in range(steps):
                 self.system.state = state  # Actualizar estado del sistema
                 
-                # Calcular cantidades conservadas
                 E_kin = self.system.kinetic_energy()
                 E_pot = self.system.potential_energy()
                 E_tot = self.system.total_energy()
                 L = self.system.angular_momentum()
                 
-                # Escribir datos
                 file.write(f"{time:.5f} ")
                 file.write(" ".join([f"{val:.5e}" for val in state]) + " ")
                 file.write(f"{E_kin:.5e} {E_pot:.5e} {E_tot:.5e} ")
                 file.write(f"{L[0]:.5e} {L[1]:.5e} {L[2]:.5e}\n")
                 
-                # Avanzar en el tiempo
                 state = self.runge_kutta_step(state, dt)
                 time += dt
         

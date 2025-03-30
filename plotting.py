@@ -6,13 +6,7 @@ import os
 
 def plot_3d_trajectories(data, show=True, save=False, filename=""):
     """
-    Grafica las trayectorias 3D de los tres cuerpos.
-    
-    Args:
-        data (dict): Diccionario con arrays de tiempo, posiciones y velocidades
-        show (bool): Mostrar gráfico interactivo
-        save (bool): Guardar imagen
-        filename (str): Nombre base del archivo
+    Grafica las trayectorias 3D de los tres cuerpos.    
     """
     fig = plt.figure(figsize=(14, 10))
     ax = fig.add_subplot(111, projection='3d')
@@ -51,13 +45,7 @@ def plot_3d_trajectories(data, show=True, save=False, filename=""):
 
 def plot_energy_momentum(data, show=True, save=False, filename=""):
     """
-    Grafica energías y momento angular del sistema.
-    
-    Args:
-        data (dict): Diccionario con arrays de tiempo, energías y momento angular
-        show (bool): Mostrar gráfico interactivo
-        save (bool): Guardar imagen
-        filename (str): Nombre base del archivo
+    Grafica energías y momento angular del sistema.    
     """
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10), sharex=True)
     
@@ -99,12 +87,6 @@ def plot_energy_momentum(data, show=True, save=False, filename=""):
 def plot_relative_distances(data, show=True, save=False, filename=""):
     """
     Grafica las distancias relativas entre los cuerpos.
-    
-    Args:
-        data (dict): Diccionario con arrays de tiempo y posiciones
-        show (bool): Mostrar gráfico interactivo
-        save (bool): Guardar imagen
-        filename (str): Nombre base del archivo
     """
     plt.figure(figsize=(12, 6))
     
@@ -135,15 +117,7 @@ def plot_relative_distances(data, show=True, save=False, filename=""):
     plt.close()
 
 def load_simulation_data(filename="three_body_simulation"):
-    """
-    Carga los datos de la simulación desde el archivo .dat
-    
-    Args:
-        filename (str): Nombre base del archivo (sin extensión)
-    
-    Returns:
-        dict: Diccionario con arrays numpy de todos los datos
-    """
+
     filepath = f"data/{filename}.dat"
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"No se encontró el archivo {filepath}")
@@ -168,7 +142,7 @@ if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description="Visualización del problema de tres cuerpos")
-    parser.add_argument("--filename", type=str, default="three_body_simulation",
+    parser.add_argument("--filename", type=str, default="sun_earth_moon_test",
                        help="Nombre base del archivo de datos (sin extensión)")
     parser.add_argument("--save", action="store_true",
                        help="Guardar gráficos en lugar de mostrarlos")
