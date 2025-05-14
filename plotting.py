@@ -4,15 +4,14 @@ from mpl_toolkits.mplot3d import Axes3D
 import os
 
 
-def plot_3d_trajectories(data, body_names=['Sun', 'Earth', 'Moon'], 
-                         colors=['gold', 'blue', 'gray'],
-                         body_sizes=None, show=False, save=False, filename=""):
+def plot_3d_trajectories(data, body_names=['Body 1', 'Body 2', 'Body 3'], 
+                         colors=['Orange', 'blue', 'gray'],
+                         body_sizes=[150, 30, 15],
+                         inital_final = False,
+                         show=False, save=False, filename=""):
     """
     Grafica las trayectorias 3D de los tres cuerpos.    
     """
-    if body_sizes is None:
-        body_sizes = [150, 30, 15]  # Valores por defecto: Sol-Tierra-Luna
-
     fig = plt.figure(figsize=(14, 10))
     ax = fig.add_subplot(111, projection='3d')
     
@@ -22,13 +21,14 @@ def plot_3d_trajectories(data, body_names=['Sun', 'Earth', 'Moon'],
                 color=color, linewidth=1.5, label=f'{name} Trajectory')
     
     # Posiciones iniciales y finales
-    for i, (color, name, size) in enumerate(zip(colors, body_names, body_sizes), 1):
-        # Punto inicial
-        ax.scatter(data[f'x{i}'][0], data[f'y{i}'][0], data[f'z{i}'][0],
-                   color=color, s=size, marker='o', label=f'{name} Start')
-        # Punto final
-        ax.scatter(data[f'x{i}'][-1], data[f'y{i}'][-1], data[f'z{i}'][-1],
-                   color=color, s=size, marker='s', label=f'{name} End')
+    if inital_final: 
+        for i, (color, name, size) in enumerate(zip(colors, body_names, body_sizes), 1):
+            # Punto inicial
+            ax.scatter(data[f'x{i}'][0], data[f'y{i}'][0], data[f'z{i}'][0],
+                    color=color, s=size, marker='o', label=f'{name} Start')
+            # Punto final
+            ax.scatter(data[f'x{i}'][-1], data[f'y{i}'][-1], data[f'z{i}'][-1],
+                    color=color, s=size, marker='s', label=f'{name} End')
     
     ax.set_xlabel('X Position (m)')
     ax.set_ylabel('Y Position (m)')
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description="Visualización del problema de tres cuerpos")
-    parser.add_argument("--filename", type=str, default="sun_earth_moon_simulation",
+    parser.add_argument("--filename", type=str, default="sun_earth_moon_test",
                        help="Nombre base del archivo de datos (sin extensión)")
     parser.add_argument("--bodies", nargs=3, type=str, default=['Sun', 'Earth', 'Moon'],
                        help="Nombres de los cuerpos (3 nombres separados por espacios)")

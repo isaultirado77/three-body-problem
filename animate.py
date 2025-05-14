@@ -119,7 +119,7 @@ class ThreeBodyAnimation:
         else:
             plt.show()
 
-def load_simulation_data(filename="sun_earth_moon_simulation", skip_steps=5):
+def load_animate_data(filename="sun_earth_moon_simulation", skip_steps=5):
     """Carga datos submuestreados cada 'skip_steps' pasos"""
     filepath = f"data/{filename}.dat"
     data = np.loadtxt(filepath, comments='#')
@@ -137,11 +137,11 @@ def load_simulation_data(filename="sun_earth_moon_simulation", skip_steps=5):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Animación del problema de tres cuerpos')
-    parser.add_argument('--filename', type=str, default='sun_earth_moon_simulation',
+    parser.add_argument('--filename', type=str, default='sun_earth_moon_test',
                        help='Nombre base del archivo de datos (sin extensión)')
     parser.add_argument('--names', nargs=3, type=str, default=['Sun', 'Earth', 'Moon'],
                        help='Nombres de los cuerpos (3 nombres)')
-    parser.add_argument('--colors', nargs=3, type=str, default=['Orange', 'blue', 'gray'],
+    parser.add_argument('--colors', nargs=3, type=str, default=['orange', 'blue', 'gray'],
                        help='Colores para cada cuerpo (3 colores)')
     parser.add_argument('--sizes', nargs=3, type=int, default=[150, 30, 15],
                        help='Tamaños de los marcadores (3 enteros)')
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     # Cargar datos
-    data = load_simulation_data(args.filename)
+    data = load_animate_data(args.filename)
     
     # Crear y ejecutar animación
     animation = ThreeBodyAnimation(
