@@ -142,9 +142,11 @@ if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description="Visualización del problema de tres cuerpos")
-    parser.add_argument("--filename", type=str, default="sun_earth_moon_test",
+    parser.add_argument("--filename", type=str, default="sun_earth_moon_simulation",
                        help="Nombre base del archivo de datos (sin extensión)")
-    parser.add_argument("--save", action="store_true",
+    parser.add_argument("--save",
+                        default=True, 
+                        action="store_true",
                        help="Guardar gráficos en lugar de mostrarlos")
     args = parser.parse_args()
     
