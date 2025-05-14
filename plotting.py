@@ -4,30 +4,37 @@ from mpl_toolkits.mplot3d import Axes3D
 import os
 
 
-def plot_3d_trajectories(data, show=True, save=False, filename=""):
+def plot_3d_trajectories(data, body_names=['Sun', 'Earth', 'Moon'], 
+                         colors=['gold', 'blue', 'gray'],
+                         body_sizes=None, show=False, save=False, filename=""):
     """
     Grafica las trayectorias 3D de los tres cuerpos.    
     """
+    if body_sizes is None:
+        body_sizes = [150, 30, 15]  # Valores por defecto: Sol-Tierra-Luna
+
     fig = plt.figure(figsize=(14, 10))
     ax = fig.add_subplot(111, projection='3d')
     
     # Trayectorias
-    ax.plot(data['x1'], data['y1'], data['z1'], 'r-', linewidth=1.5, label='Cuerpo 1')
-    ax.plot(data['x2'], data['y2'], data['z2'], 'g-', linewidth=1.5, label='Cuerpo 2')
-    ax.plot(data['x3'], data['y3'], data['z3'], 'b-', linewidth=1.5, label='Cuerpo 3')
+    for i, (color, name) in enumerate(zip(colors, body_names), 1):
+        ax.plot(data[f'x{i}'], data[f'y{i}'], data[f'z{i}'], 
+                color=color, linewidth=1.5, label=f'{name} Trajectory')
     
     # Posiciones iniciales y finales
-    for i, color in zip(['1', '2', '3'], ['ro', 'go', 'bo']):
-        ax.scatter(data[f'x{i}'][0], data[f'y{i}'][0], data[f'z{i}'][0], 
-                   color[0]+'o', s=100, label=f'Inicio {i}')
-        ax.scatter(data[f'x{i}'][-1], data[f'y{i}'][-1], data[f'z{i}'][-1], 
-                   color[0]+'s', s=100, label=f'Fin {i}')
+    for i, (color, name, size) in enumerate(zip(colors, body_names, body_sizes), 1):
+        # Punto inicial
+        ax.scatter(data[f'x{i}'][0], data[f'y{i}'][0], data[f'z{i}'][0],
+                   color=color, s=size, marker='o', label=f'{name} Start')
+        # Punto final
+        ax.scatter(data[f'x{i}'][-1], data[f'y{i}'][-1], data[f'z{i}'][-1],
+                   color=color, s=size, marker='s', label=f'{name} End')
     
-    ax.set_xlabel('Posición X (m)')
-    ax.set_ylabel('Posición Y (m)')
-    ax.set_zlabel('Posición Z (m)')
-    ax.set_title('Trayectorias de los Tres Cuerpos')
-    ax.legend(loc='upper right')
+    ax.set_xlabel('X Position (m)')
+    ax.set_ylabel('Y Position (m)')
+    ax.set_zlabel('Z Position (m)')
+    ax.set_title('Three-Body System Trajectories')
+    ax.legend(loc='upper right', bbox_to_anchor=(1.2, 1))
     
     ax.view_init(elev=30, azim=45)
     ax.grid(True)
@@ -43,19 +50,17 @@ def plot_3d_trajectories(data, show=True, save=False, filename=""):
     
     plt.close()
 
-def plot_energy_momentum(data, show=True, save=False, filename=""):
-    """
-    Grafica energías y momento angular del sistema.    
-    """
+def plot_energy_momentum(data, body_names=['Sun', 'Earth', 'Moon'], show=False, save=False, filename=""):
+    """Grafica energías y momento angular del sistema."""
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10), sharex=True)
     
     # Energías
-    ax1.plot(data['time'], data['E_kin'], 'b-', label='Energía Cinética', linewidth=1.5)
-    ax1.plot(data['time'], data['E_pot'], 'r-', label='Energía Potencial', linewidth=1.5)
-    ax1.plot(data['time'], data['E_tot'], 'g--', label='Energía Total', linewidth=2.0)
+    ax1.plot(data['time'], data['E_kin'], 'b-', label='Kinetic Energy', linewidth=1.5)
+    ax1.plot(data['time'], data['E_pot'], 'r-', label='Potential Energy', linewidth=1.5)
+    ax1.plot(data['time'], data['E_tot'], 'g--', label='Total Energy', linewidth=2.0)
     
-    ax1.set_ylabel('Energía (J)')
-    ax1.set_title('Conservación de Energía y Momento Angular')
+    ax1.set_ylabel('Energy (J)')
+    ax1.set_title(f'Energy and Angular Momentum Conservation\nSystem: {", ".join(body_names)}')
     ax1.legend()
     ax1.grid(True, linestyle='--', alpha=0.6)
     
@@ -66,8 +71,8 @@ def plot_energy_momentum(data, show=True, save=False, filename=""):
     ax2.plot(data['time'], np.sqrt(data['Lx']**2 + data['Ly']**2 + data['Lz']**2), 
              'k--', label='|L|', linewidth=2.0)
     
-    ax2.set_xlabel('Tiempo (s)')
-    ax2.set_ylabel('Momento Angular (kg m²/s)')
+    ax2.set_xlabel('Time (s)')
+    ax2.set_ylabel('Angular Momentum (kg m²/s)')
     ax2.legend()
     ax2.grid(True, linestyle='--', alpha=0.6)
     
@@ -84,10 +89,9 @@ def plot_energy_momentum(data, show=True, save=False, filename=""):
     
     plt.close()
 
-def plot_relative_distances(data, show=True, save=False, filename=""):
-    """
-    Grafica las distancias relativas entre los cuerpos.
-    """
+
+def plot_relative_distances(data, body_names=['Sun', 'Earth', 'Moon'], show=False, save=False, filename=""):
+    """Grafica las distancias relativas entre los cuerpos."""
     plt.figure(figsize=(12, 6))
     
     # Calcular distancias
@@ -95,13 +99,13 @@ def plot_relative_distances(data, show=True, save=False, filename=""):
     r13 = np.sqrt((data['x1']-data['x3'])**2 + (data['y1']-data['y3'])**2 + (data['z1']-data['z3'])**2)
     r23 = np.sqrt((data['x2']-data['x3'])**2 + (data['y2']-data['y3'])**2 + (data['z2']-data['z3'])**2)
     
-    plt.plot(data['time'], r12, 'r-', label='Distancia Cuerpo 1-2', linewidth=1.5)
-    plt.plot(data['time'], r13, 'g-', label='Distancia Cuerpo 1-3', linewidth=1.5)
-    plt.plot(data['time'], r23, 'b-', label='Distancia Cuerpo 2-3', linewidth=1.5)
+    plt.plot(data['time'], r12, 'r-', label=f'{body_names[0]}-{body_names[1]} Distance', linewidth=1.5)
+    plt.plot(data['time'], r13, 'g-', label=f'{body_names[0]}-{body_names[2]} Distance', linewidth=1.5)
+    plt.plot(data['time'], r23, 'b-', label=f'{body_names[1]}-{body_names[2]} Distance', linewidth=1.5)
     
-    plt.xlabel('Tiempo (s)')
-    plt.ylabel('Distancia (m)')
-    plt.title('Distancias Relativas entre Cuerpos')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Distance (m)')
+    plt.title(f'Relative Distances Between Bodies\n{", ".join(body_names)}')
     plt.legend()
     plt.grid(True, linestyle='--', alpha=0.6)
     
@@ -115,6 +119,7 @@ def plot_relative_distances(data, show=True, save=False, filename=""):
         plt.show()
     
     plt.close()
+
 
 def load_simulation_data(filename="three_body_simulation"):
 
@@ -144,16 +149,24 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Visualización del problema de tres cuerpos")
     parser.add_argument("--filename", type=str, default="sun_earth_moon_simulation",
                        help="Nombre base del archivo de datos (sin extensión)")
+    parser.add_argument("--bodies", nargs=3, type=str, default=['Sun', 'Earth', 'Moon'],
+                       help="Nombres de los cuerpos (3 nombres separados por espacios)")
+    parser.add_argument("--sizes", nargs=3, type=int, default=None,
+                       help="Tamaños de los marcadores (3 valores enteros)")
     parser.add_argument("--save",
-                        default=True, 
+                        default=True,
                         action="store_true",
-                       help="Guardar gráficos en lugar de mostrarlos")
+                        help="Guardar gráficos en lugar de mostrarlos")
+    
     args = parser.parse_args()
     
     # Cargar datos
     data = load_simulation_data(args.filename)
     
     # Generar gráficos
-    plot_3d_trajectories(data, show=not args.save, save=args.save, filename=args.filename)
-    plot_energy_momentum(data, show=not args.save, save=args.save, filename=args.filename)
-    plot_relative_distances(data, show=not args.save, save=args.save, filename=args.filename)
+    plot_3d_trajectories(data, body_names=args.bodies, body_sizes=args.sizes,
+                         show=not args.save, save=args.save, filename=args.filename)
+    plot_energy_momentum(data, body_names=args.bodies,
+                         show=not args.save, save=args.save, filename=args.filename)
+    plot_relative_distances(data, body_names=args.bodies,
+                         show=not args.save, save=args.save, filename=args.filename)
