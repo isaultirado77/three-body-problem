@@ -1,6 +1,8 @@
 import os
 import numpy as np
 import argparse
+from config_loader import load_config, validate_config
+
 
 class ThreeBodySystem:
     def __init__(self, masses, initial_positions, initial_velocities, G=6.67430e-11):
@@ -157,8 +159,26 @@ def main(masses=[1.0, 1.0, 1.0],
     simulator = ThreeBodySimulator(system, filename)
     simulator.simulate(t_max, dt)
 
+
+def main_from_config(config_file):
+    """Ejecuta la simulación desde un archivo de configuración. """
+    config = validate_config(load_config(config_file))
+    
+    system = ThreeBodySystem(
+        masses=config['masses'],
+        initial_positions=config['initial_positions'],
+        initial_velocities=config['initial_velocities'],
+        G=config['G']
+    )
+    
+    simulator = ThreeBodySimulator(system, config['filename'])
+    simulator.simulate(config['t_max'], config['dt'])
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Simulador del problema de tres cuerpos usando RK4.")
+
+    # Opción para archivo de configuración
+    parser.add_argument("--config", type=str, help="Archivo de configuración (.json o .yaml)")
     
     # Masas de los cuerpos
     parser.add_argument("--m1", type=float, default=1.0, help="Masa del primer cuerpo (kg)")
@@ -198,25 +218,26 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    masses = [args.m1, args.m2, args.m3]
-    
-    initial_positions = [
-        [args.x1, args.y1, args.z1],
-        [args.x2, args.y2, args.z2],
-        [args.x3, args.y3, args.z3]
-    ]
-    
-    initial_velocities = [
-        [args.vx1, args.vy1, args.vz1],
-        [args.vx2, args.vy2, args.vz2],
-        [args.vx3, args.vy3, args.vz3]
-    ]
-    
-    main(
-        masses=masses,
-        initial_positions=initial_positions,
-        initial_velocities=initial_velocities,
-        dt=args.dt,
-        t_max=args.t_max,
-        filename=args.filename
-    )
+    if args.config:
+        main_from_config(args.config)
+    else:
+        masses = [args.m1, args.m2, args.m3]
+        initial_positions = [
+            [args.x1, args.y1, args.z1],
+            [args.x2, args.y2, args.z2],
+            [args.x3, args.y3, args.z3]
+        ]
+        initial_velocities = [
+            [args.vx1, args.vy1, args.vz1],
+            [args.vx2, args.vy2, args.vz2],
+            [args.vx3, args.vy3, args.vz3]
+        ]
+        
+        main(
+            masses=masses,
+            initial_positions=initial_positions,
+            initial_velocities=initial_velocities,
+            dt=args.dt,
+            t_max=args.t_max,
+            filename=args.filename
+        )

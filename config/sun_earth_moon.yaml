@@ -1,0 +1,19 @@
+masses:
+  - 1.9885e30
+  - 5.972e24
+  - 7.342e22
+
+initial_positions:
+  - [0.0, 0.0, 0.0]
+  - [1.496e11, 0.0, 0.0]
+  - [1.496e11 + 3.844e8, 0.0, 3.844e8]
+
+initial_velocities:
+  - [0.0, 0.0, 0.0]
+  - [0.0, 12.0e3, 0.0]
+  - [0.0, 22.0e3, 15.0e3]
+
+dt: 21600
+t_max: 1.577e8
+filename: "sun_earth_moon_simulation"
+G: 6.67430e-11
