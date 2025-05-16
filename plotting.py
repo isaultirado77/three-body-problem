@@ -8,7 +8,7 @@ def plot_3d_trajectories(data, body_names=['Body 1', 'Body 2', 'Body 3'],
                          colors=['Orange', 'blue', 'gray'],
                          body_sizes=[150, 30, 15],
                          inital_final = False,
-                         show=False, save=False, filename=""):
+                         show=False, save=False, filename="three_body_simulation"):
     """
     Grafica las trayectorias 3D de los tres cuerpos.    
     """
