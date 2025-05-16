@@ -8,12 +8,14 @@ import os
 import argparse
 
 class ThreeBodyAnimation:
-    def __init__(self, data, body_names=['Body 1', 'Body 2', 'Body 3'], 
+    def __init__(self, data, title="Three-Body System Animation", 
+                 body_names=['Body 1', 'Body 2', 'Body 3'], 
                  colors=['gold', 'blue', 'gray'], sizes=[100, 40, 20], 
                  trail_length=100, interval=50):
         """
         Inicializa la animación del sistema de tres cuerpos.
         """
+        self.title = title
         self.data = data
         self.body_names = body_names
         self.colors = colors
@@ -38,7 +40,7 @@ class ThreeBodyAnimation:
             self.data['x3'], self.data['y3'], self.data['z3']
         ])
         
-        max_range = np.max(np.abs(all_positions)) * 1.1
+        max_range = np.max(np.abs(all_positions)) * 0.6
         
         self.ax.set_xlim([-max_range, max_range])
         self.ax.set_ylim([-max_range, max_range])
@@ -47,7 +49,7 @@ class ThreeBodyAnimation:
         self.ax.set_xlabel('X Position (m)')
         self.ax.set_ylabel('Y Position (m)')
         self.ax.set_zlabel('Z Position (m)')
-        self.ax.set_title('Three-Body System Animation')
+        self.ax.set_title(self.title)
         
         # Crear cuerpos y trayectorias
         for i, (name, color, size) in enumerate(zip(self.body_names, self.colors, self.sizes)):
@@ -112,7 +114,7 @@ class ThreeBodyAnimation:
         )
         
         if save:
-            writer = FFMpegWriter(fps=30, bitrate=1800)
+            writer = FFMpegWriter(fps=45, bitrate=5000)
             save_path = f"animations/{filename}.mp4"
             print(f"Guardando animación en {save_path}...")
             anim.save(save_path, writer=writer, dpi=200)
