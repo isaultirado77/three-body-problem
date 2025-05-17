@@ -6,7 +6,7 @@ Este proyecto simula un sistema de tres cuerpos (Tierra, Luna y un asteroide) co
 
 Los resultados están disponibles en el siguiente notebook:
 
-[![Ver Análisis en Jupyter](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.jupyter.org/github/isaultirado77/three-body-problem/blob/main/three_body_analysis.ipynb)
+- `three_body_analysis.ipynb`- [![Ver Análisis en Jupyter](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.jupyter.org/github/isaultirado77/three-body-problem/blob/main/three_body_analysis.ipynb)
 
 ## Ejecución de la Simulación
 
